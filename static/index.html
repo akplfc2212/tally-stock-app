@@ -3,35 +3,75 @@
 <head>
   <title>Stock Check</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      max-width: 400px;
+      max-width: 420px;
       margin: auto;
+      background: #f7f7f7;
     }
+
+    h2 {
+      text-align: center;
+    }
+
     input, button {
       width: 100%;
       padding: 12px;
       font-size: 16px;
       margin-top: 10px;
     }
+
+    button {
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+    }
+
+    button:active {
+      opacity: 0.85;
+    }
+
+    #result {
+      margin-top: 15px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
     img {
       margin-top: 15px;
       max-width: 100%;
       border-radius: 6px;
     }
+
     .error {
       color: red;
       margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .out {
+      color: red;
+      font-weight: bold;
     }
   </style>
 </head>
+
 <body>
 
 <h2>Check Stock</h2>
 
-<input id="code" placeholder="Enter Item Code (e.g. FR-101)">
+<input
+  id="code"
+  placeholder="Enter Item Code (e.g. FR-101)"
+  oninput="this.value = this.value.toUpperCase()"
+  onkeydown="if(event.key === 'Enter') checkStock()"
+/>
+
 <button onclick="checkStock()">Check</button>
 
 <div id="result"></div>
@@ -40,23 +80,33 @@
 function checkStock() {
   const code = document.getElementById("code").value.trim();
   const result = document.getElementById("result");
-  result.innerHTML = "Checking...";
+
+  if (!code) {
+    result.innerHTML = `<div class="error">Please enter an item code</div>`;
+    return;
+  }
+
+  result.innerHTML = "Checking stock...";
 
   fetch(`/stock/${code}`)
     .then(res => res.json())
     .then(data => {
       if (data.error) {
-        result.innerHTML = `<div class="error">${data.error}</div>`;
+        result.innerHTML = `<div class="error">Item not found</div>`;
       } else {
+        const stockHtml = data.stock > 0
+          ? `<p><b>Available Stock:</b> ${data.stock}</p>`
+          : `<p class="out">Out of Stock</p>`;
+
         result.innerHTML = `
           <h3>${data.name}</h3>
-          <p><b>Available Stock:</b> ${data.stock}</p>
+          ${stockHtml}
           <img src="${data.image_url}">
         `;
       }
     })
     .catch(() => {
-      result.innerHTML = `<div class="error">Server not reachable</div>`;
+      result.innerHTML = `<div class="error">Server unreachable. Try again.</div>`;
     });
 }
 </script>
