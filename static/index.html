@@ -31,10 +31,6 @@
       border-radius: 6px;
     }
 
-    button:active {
-      opacity: 0.85;
-    }
-
     #result {
       margin-top: 15px;
       background: #fff;
@@ -50,13 +46,19 @@
 
     .error {
       color: red;
-      margin-top: 10px;
       font-weight: bold;
+      margin-top: 10px;
     }
 
     .out {
       color: red;
       font-weight: bold;
+    }
+
+    .updated {
+      font-size: 14px;
+      color: gray;
+      margin-top: 5px;
     }
   </style>
 </head>
@@ -77,6 +79,19 @@
 <div id="result"></div>
 
 <script>
+function formatDate(isoString) {
+  const d = new Date(isoString);
+
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+
+  return `${day}/${month}/${year}, ${hours}:${minutes}`;
+}
+
 function checkStock() {
   const code = document.getElementById("code").value.trim();
   const result = document.getElementById("result");
@@ -98,9 +113,14 @@ function checkStock() {
           ? `<p><b>Available Stock:</b> ${data.stock}</p>`
           : `<p class="out">Out of Stock</p>`;
 
+        const updatedHtml = data.last_updated
+          ? `<div class="updated">Last updated: ${formatDate(data.last_updated)}</div>`
+          : "";
+
         result.innerHTML = `
           <h3>${data.name}</h3>
           ${stockHtml}
+          ${updatedHtml}
           <img src="${data.image_url}">
         `;
       }

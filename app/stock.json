@@ -1,7 +1,10 @@
 {
+  "_meta": {
+    "last_updated": "2026-02-03T15:42:00"
+  },
   "FR-101": {
     "name": "Wooden Frame 12x8",
-    "stock": 50,
+    "stock": 40,
     "image": "FR-101.jpg"
   },
   "FR-202": {
