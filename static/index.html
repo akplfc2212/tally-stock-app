@@ -42,7 +42,7 @@ function checkStock() {
   const result = document.getElementById("result");
   result.innerHTML = "Checking...";
 
-  fetch(`http://127.0.0.1:8000/stock/${code}`)
+  fetch(`/stock/${code}`)
     .then(res => res.json())
     .then(data => {
       if (data.error) {
@@ -51,7 +51,7 @@ function checkStock() {
         result.innerHTML = `
           <h3>${data.name}</h3>
           <p><b>Available Stock:</b> ${data.stock}</p>
-          <img src="http://127.0.0.1:8000${data.image_url}">
+          <img src="${data.image_url}">
         `;
       }
     })
