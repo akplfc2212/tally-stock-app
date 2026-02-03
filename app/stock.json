@@ -1,0 +1,12 @@
+{
+  "FR-101": {
+    "name": "Wooden Frame 12x8",
+    "stock": 50,
+    "image": "FR-101.jpg"
+  },
+  "FR-202": {
+    "name": "Metal Frame A3",
+    "stock": 12,
+    "image": "FR-202.jpg"
+  }
+}

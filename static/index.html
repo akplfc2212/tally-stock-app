@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stock Check</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    img {
+      margin-top: 15px;
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Check Stock</h2>
+
+<input id="code" placeholder="Enter Item Code (e.g. FR-101)">
+<button onclick="checkStock()">Check</button>
+
+<div id="result"></div>
+
+<script>
+function checkStock() {
+  const code = document.getElementById("code").value.trim();
+  const result = document.getElementById("result");
+  result.innerHTML = "Checking...";
+
+  fetch(`http://127.0.0.1:8000/stock/${code}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        result.innerHTML = `<div class="error">${data.error}</div>`;
+      } else {
+        result.innerHTML = `
+          <h3>${data.name}</h3>
+          <p><b>Available Stock:</b> ${data.stock}</p>
+          <img src="http://127.0.0.1:8000${data.image_url}">
+        `;
+      }
+    })
+    .catch(() => {
+      result.innerHTML = `<div class="error">Server not reachable</div>`;
+    });
+}
+</script>
+
+</body>
+</html>
